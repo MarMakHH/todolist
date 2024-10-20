@@ -1,13 +1,21 @@
-import { useRef, useState } from "react"
+import { useRef, useState } from "react";
+import dayjs from 'dayjs';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 import TodoTable from "./Todotable";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import 'dayjs/locale/de';
 
 export default function Todolist() {
-    const [todo, setDesc] = useState({ desc: "", date: "", priority: "" });
+    const [todo, setTodo] = useState({ desc: "", date: dayjs(), priority: "" });
     const [todos, setTodos] = useState([]);
     const gridRef = useRef();
 
     const handleChange = e => {
-        setDesc({ ...todo, [e.target.name]: e.target.value });
+        setTodo({ ...todo, [e.target.name]: e.target.value });
     }
 
     const addTodo = () => {
@@ -16,21 +24,32 @@ export default function Todolist() {
 
     const handleDelete = () => {
         if (gridRef.current.getSelectedNodes().length > 0) {
-            setTodos(todos.filter((todo, index) => 
-              index != gridRef.current.getSelectedNodes()[0].id))
-          }
-          else {
+            setTodos(todos.filter((todo, index) =>
+                index != gridRef.current.getSelectedNodes()[0].id))
+        }
+        else {
             alert('Select a row first!');
-          }
+        }
     }
 
     return (
         <>
-            <input type="text" name="desc" placeholder="Description" onChange={handleChange} value={todo.desc} />
-            <input type="date" name="date" placeholder="Date" onChange={handleChange} value={todo.date} />
-            <input type="text" name="priority" placeholder="Priority" onChange={handleChange} value={todo.priority} />
-            <button onClick={addTodo}>Add</button>
-            <button onClick={handleDelete}>Delete</button>
+
+            <Stack
+                mt={2}
+                direction="row"
+                spacing={2}
+                justifyContent="center"
+                alignItems="center"
+            >
+                <TextField label="Description" name="desc" placeholder="Description" onChange={handleChange} value={todo.desc} />
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
+                    <DatePicker label="Date" name="date" value={todo.date} onChange={handleChange} />
+                </LocalizationProvider>
+                <TextField label="Priority" name="priority" placeholder="Priority" onChange={handleChange} value={todo.priority} />
+                <Button onClick={addTodo}>Add</Button>
+                <Button onClick={handleDelete} color="error">Delete</Button>
+            </Stack>
             <TodoTable todos={todos} gridRef={gridRef} />
 
         </>
