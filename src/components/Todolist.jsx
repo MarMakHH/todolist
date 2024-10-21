@@ -44,11 +44,11 @@ export default function Todolist() {
             >
                 <TextField label="Description" name="desc" placeholder="Description" onChange={handleChange} value={todo.desc} />
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
-                    <DatePicker label="Date" name="date" value={todo.date} onChange={handleChange} />
+                    <DatePicker label="Date" name="date" value={todo.date} onChange={(date) => setTodo({...todo, date: dayjs(date)})} />
                 </LocalizationProvider>
                 <TextField label="Priority" name="priority" placeholder="Priority" onChange={handleChange} value={todo.priority} />
-                <Button onClick={addTodo}>Add</Button>
-                <Button onClick={handleDelete} color="error">Delete</Button>
+                <Button variant="outlined" onClick={addTodo}>Add</Button>
+                <Button variant="outlined" onClick={handleDelete} color="error">Delete</Button>
             </Stack>
             <TodoTable todos={todos} gridRef={gridRef} />
 
